@@ -64,7 +64,7 @@ Project screenshots are available in the `Screenshots` folder.
 1. Clone this repository:
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/14-Palak/python-developer-internship.git
 ```
 
 2. Open the required project folder.
