@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TaskFlow | To-Do List</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header class="header">
+            <div>
+                <p class="tagline">YOUR PERSONAL PRODUCTIVITY SPACE</p>
+                <h1>Task<span>Flow.</span></h1>
+                <p class="subtitle">Organize your day, one task at a time.</p>
+            </div>
+
+            <div class="date">
+                <span>✦</span> Stay productive
+            </div>
+        </header>
+
+        <section class="stats">
+
+            <div class="stat-card">
+                <p>Total Tasks</p>
+                <h2>{{ total }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Completed</p>
+                <h2>{{ completed }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Pending</p>
+                <h2>{{ pending }}</h2>
+            </div>
+
+        </section>
+
+        <section class="task-section">
+
+            <h2>My Tasks</h2>
+            <p class="section-subtitle">
+                Make today count. Add something you want to accomplish.
+            </p>
+
+            <form action="{{ url_for('add_task') }}"
+                  method="POST"
+                  class="add-form">
+
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="What needs to be done?"
+                    maxlength="200"
+                    required
+                >
+
+                <button type="submit">+ Add Task</button>
+
+            </form>
+
+            <div class="task-list">
+
+                {% if tasks %}
+
+                    {% for task in tasks %}
+
+                        <div class="task-item
+                            {% if task.completed %}completed{% endif %}">
+
+                            <form action="{{ url_for('toggle_task', task_id=task.id) }}"
+                                  method="POST">
+
+                                <button type="submit" class="check-button"
+                                        aria-label="Toggle task completion">
+                                    {% if task.completed %}
+                                        ✓
+                                    {% else %}
+                                        ○
+                                    {% endif %}
+                                </button>
+
+                            </form>
+
+                            <span class="task-title">
+                                {{ task.title }}
+                            </span>
+
+                            <form action="{{ url_for('delete_task', task_id=task.id) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Delete this task?');">
+
+                                <button type="submit"
+                                        class="delete-button"
+                                        aria-label="Delete task">
+                                    🗑
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-state">
+                        <div class="empty-icon">✦</div>
+                        <h3>No tasks yet</h3>
+                        <p>Add your first task and get started!</p>
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+        <footer>
+            Built with Python & Flask · TaskFlow
+        </footer>
+
+    </div>
+
+</body>
+</html>

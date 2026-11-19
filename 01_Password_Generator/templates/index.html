@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SecurePass | Password Generator</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="background-glow"></div>
+
+<main class="container">
+
+    <header>
+        <div class="logo">S</div>
+        <span>SecurePass</span>
+        <span class="secure-tag">● SECURE TOOL</span>
+    </header>
+
+    <section class="hero">
+        <p class="eyebrow">YOUR DIGITAL SECURITY COMPANION</p>
+
+        <h1>Create Strong<br>
+            <span>Passwords.</span>
+        </h1>
+
+        <p class="subtitle">
+            Generate powerful, unique passwords
+            to protect your digital world.
+        </p>
+    </section>
+
+    <section class="generator-card">
+
+        <div class="card-heading">
+            <div>
+                <h2>Password Generator</h2>
+                <p>Customize your password settings</p>
+            </div>
+            <span class="lock">♧</span>
+        </div>
+
+        <form method="POST">
+
+            <div class="section-title">
+                <label for="length">Password Length</label>
+                <span class="length-value" id="lengthValue">
+                    {{ length }}
+                </span>
+            </div>
+
+            <input type="range"
+                   id="length"
+                   name="length"
+                   min="4"
+                   max="64"
+                   value="{{ length }}"
+                   oninput="document.getElementById('lengthValue').textContent=this.value">
+
+            <div class="range-labels">
+                <span>4 characters</span>
+                <span>64 characters</span>
+            </div>
+
+            <div class="section-title options-heading">
+                <label>Character Options</label>
+                <span class="optional">CUSTOMIZE</span>
+            </div>
+
+            <div class="options-grid">
+
+                <label class="option">
+                    <input type="checkbox"
+                           name="uppercase"
+                           {% if options.uppercase %}checked{% endif %}>
+                    <span>ABC</span>
+                    Uppercase
+                </label>
+
+                <label class="option">
+                    <input type="checkbox"
+                           name="lowercase"
+                           {% if options.lowercase %}checked{% endif %}>
+                    <span>abc</span>
+                    Lowercase
+                </label>
+
+                <label class="option">
+                    <input type="checkbox"
+                           name="numbers"
+                           {% if options.numbers %}checked{% endif %}>
+                    <span>123</span>
+                    Numbers
+                </label>
+
+                <label class="option">
+                    <input type="checkbox"
+                           name="symbols"
+                           {% if options.symbols %}checked{% endif %}>
+                    <span>!@#</span>
+                    Symbols
+                </label>
+
+            </div>
+
+            <div class="count-row">
+                <label for="count">Number of passwords</label>
+
+                <input type="number"
+                       id="count"
+                       name="count"
+                       min="1"
+                       max="10"
+                       value="{{ count }}">
+            </div>
+
+            <button type="submit" class="generate-btn">
+                ✦ Generate Password
+            </button>
+
+        </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        {% if passwords %}
+
+        <div class="results">
+            <h3>Your Generated Passwords</h3>
+
+            {% for password in passwords %}
+            <div class="password-row">
+
+                <code>{{ password }}</code>
+
+                <button type="button"
+                        class="copy-btn"
+                        data-password="{{ password }}"
+                        onclick="copyPassword(this)">
+                    Copy
+                </button>
+
+            </div>
+            {% endfor %}
+
+            <p id="copyMessage" class="copy-message"></p>
+        </div>
+
+        {% endif %}
+
+    </section>
+
+    <footer>
+        <span>SECURE • PRIVATE • SIMPLE</span>
+        <p>Made with Python & Flask</p>
+    </footer>
+
+</main>
+
+<script>
+function copyPassword(button) {
+
+    const password = button.dataset.password;
+
+    navigator.clipboard.writeText(password)
+        .then(() => {
+            document.getElementById("copyMessage").textContent =
+                "Password copied successfully!";
+
+            button.textContent = "Copied!";
+
+            setTimeout(() => {
+                button.textContent = "Copy";
+            }, 1500);
+        })
+        .catch(() => {
+            document.getElementById("copyMessage").textContent =
+                "Copy failed. Please copy manually.";
+        });
+}
+</script>
+
+</body>
+</html>
